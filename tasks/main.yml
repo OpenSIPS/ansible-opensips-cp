@@ -1,0 +1,41 @@
+---
+- name: Install prerequisites for Debian
+  package:
+          name: "{{ debian_dependencies }}"
+          state: present
+  when: ansible_os_family == "Debian"
+
+
+- name: Install prerequisites for RedHat
+  package:
+          name: "{{ redhat_dependencies }}"
+          state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Install git
+  package:
+          name: git
+
+- name: Deploy OpenSIPS CP source
+  git:
+          repo: "{{ opensips_cp_git_url }}"
+          dest: "{{ opensips_cp_dir }}"
+          version: "{{ opensips_cp_git_branch }}"
+  when: opensips_cp_url is not defined
+ 
+- name: Configure Apache
+  template:
+          src: 000-default.conf.j2
+          dest: /etc/apache2/sites-available/000-default.conf
+
+- name: Configure Cron
+  copy:
+         src: /var/www/html/opensips-cp/config-tools/system/smonitor/opensips_stats_cron
+         dest: /etc/cron.d
+
+- name: Configure database
+  template:
+          src: db.inc.php.j2
+          dest: /var/www/html/opensips-cp/config/db.inc.php
+
+
