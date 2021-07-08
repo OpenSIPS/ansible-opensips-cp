@@ -23,7 +23,7 @@ opensips_cp_git_branch: master
 opensips_cp_pass: opensipsrw
 opensips_cp_user: opensips
 opensips_cp_db: opensips
-opensis_cp_host: '{{ private_ip | default("localhost")}}'
+opensips_cp_db_host: '{{ private_ip | default("localhost")}}'
 
 
           

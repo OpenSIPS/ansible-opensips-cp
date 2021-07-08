@@ -22,20 +22,26 @@
           dest: "{{ opensips_cp_dir }}"
           version: "{{ opensips_cp_git_branch }}"
   when: opensips_cp_url is not defined
- 
+
 - name: Configure Apache
   template:
           src: 000-default.conf.j2
           dest: /etc/apache2/sites-available/000-default.conf
+  notify: 
+        - restart apache
 
 - name: Configure Cron
   copy:
-         src: /var/www/html/opensips-cp/config-tools/system/smonitor/opensips_stats_cron
+         src: /var/www/html/opensips-cp/config/tools/system/smonitor/opensips_stats_cron
          dest: /etc/cron.d
+  notify:
+        - restart cron 
 
 - name: Configure database
   template:
           src: db.inc.php.j2
           dest: /var/www/html/opensips-cp/config/db.inc.php
 
-
+- name: Create OCP tables
+  shell: 
+        cmd: 'mysql -Dopensips  < /var/www/html/opensips-cp/config/db_schema.mysql'
