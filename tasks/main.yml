@@ -15,11 +15,12 @@
 - name: Install git
   package:
           name: git
+          state: present
 
 - name: Check opensips-cp dir content
   shell: ls
   args:
-          chdir /var/www/html/opensips-cp
+          chdir: /var/www/html/opensips-cp
   register: contents
 
 - name: Deploy OpenSIPS CP source
