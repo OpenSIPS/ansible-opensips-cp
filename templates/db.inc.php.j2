@@ -32,10 +32,10 @@ if (!isset($config)) $config = new stdClass();
  $config->db_port = "{{ opensips_cp_port | default('') }}";
  
  //database connection user
- $config->db_user = "{{ opensips_cp_user }}";
+ $config->db_user = "{{ opensips_cp_db_user }}";
  
  //database connection password
- $config->db_pass = "{{ opensips_cp_pass }}";
+ $config->db_pass = "{{ opensips_cp_db_pass }}";
  
  //database name
  $config->db_name = "{{ opensips_cp_db }}";

@@ -12,16 +12,16 @@ debian_dependencies:
 redhat_dependencies:
         - httpd
         - php
-        - php-mysql
+        - php-mysqlnd
         - php-gd
         - php-pear
-        - php-pecl-apc
+        - php-pecl-apcu #in documentatie e php-pecl-apc
        
 opensips_cp_git_url: https://github.com/OpenSIPS/opensips-cp
 opensips_cp_dir: /var/www/html/opensips-cp
 opensips_cp_git_branch: master
-opensips_cp_pass: opensipsrw
-opensips_cp_user: opensips
+opensips_cp_db_pass: opensipsrw
+opensips_cp_db_user: opensips
 opensips_cp_db: opensips
 opensips_cp_db_host: '{{ private_ip | default("localhost")}}'
 

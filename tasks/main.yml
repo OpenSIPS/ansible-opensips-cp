@@ -16,32 +16,80 @@
   package:
           name: git
 
+- name: Check opensips-cp dir content
+  shell: ls
+  args:
+          chdir /var/www/html/opensips-cp
+  register: contents
+
 - name: Deploy OpenSIPS CP source
   git:
           repo: "{{ opensips_cp_git_url }}"
           dest: "{{ opensips_cp_dir }}"
           version: "{{ opensips_cp_git_branch }}"
-  when: opensips_cp_url is not defined
+  when: opensips_cp_url is not defined and ( contents["stdout_lines"] | length > 0 )
 
-- name: Configure Apache
+- name: Deploy OpenSIPS CP source from url # asta doar am remarcat ca nu o facusem, si parea ca trebuie 
+                                           #when-ului de mai sus, dar nu mai tin minte exact, nu stiu daca are sens
+  git:
+          repo: "{{ opensips_cp_url }}"
+          dest: "{{ opensips_cp_dir }}"
+          version: "{{ opensips_cp_git_branch }}"
+
+- name: Set Apache var Debian
+  set_fact: 
+        apache_name: apache2
+  when: ansible_os_family == "Debian"
+
+- name: Set Apache var RedHat
+  set_fact:
+          apache_name: httpd
+  when: ansible_os_family == "RedHat"
+
+- name: Configure Apache Debian
   template:
           src: 000-default.conf.j2
           dest: /etc/apache2/sites-available/000-default.conf
+  when: ansible_os_family == "Debian"
   notify: 
+        - restart apache
+
+- name: Configure Apache RedHat
+  template:
+          src: 000-default.conf.j2
+          dest: /etc/httpd/conf.d/httpd-opensips.conf
+  when: ansible_os_family == "RedHat"
+  notify:
         - restart apache
 
 - name: Configure Cron
   copy:
-         src: /var/www/html/opensips-cp/config/tools/system/smonitor/opensips_stats_cron
+         src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
          dest: /etc/cron.d
   notify:
-        - restart cron 
+        - restart cron #merge doar pe debian
 
 - name: Configure database
   template:
           src: db.inc.php.j2
-          dest: /var/www/html/opensips-cp/config/db.inc.php
+          dest: "{{ opensips_cp_dir }}/config/db.inc.php"
+
+- name: Configure modules
+  template:
+          src: modules.inc.php.j2
+          dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
+
+- name: Configure global options
+  template:
+          src: globals.php.j2
+          dest: "{{ opensips_cp_dir }}/config/globals.php"
+
+- name: Boxes definition
+  template:
+          src: boxes.global.inc.php.j2  
+          dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
 
 - name: Create OCP tables
   shell: 
-        cmd: 'mysql -Dopensips  < /var/www/html/opensips-cp/config/db_schema.mysql'
+        cmd: "mysql -Dopensips  < {{ opensips_cp_dir }}/config/db_schema.mysql" #daca folosesc -p ca sa pot sa utilizez
+        #credentials, dar de ex. nu am parola, se blocheaza fiindca asteapta sa dau input parola dupa
