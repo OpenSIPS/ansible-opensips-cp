@@ -1,74 +1,48 @@
 ---
-- name: Install prerequisites for Debian
-  package:
-          name: "{{ debian_dependencies }}"
-          state: present
-  when: ansible_os_family == "Debian"
+- name: Gather distribution vars
+  include_vars: '{{ ansible_os_family | lower }}.yml'
 
-
-- name: Install prerequisites for RedHat
+- name: Install prerequisites
   package:
-          name: "{{ redhat_dependencies }}"
-          state: present
-  when: ansible_os_family == "RedHat"
-
-- name: Install git
-  package:
-          name: git
+          name: "{{ dependencies }}"
           state: present
 
 - name: Check opensips-cp dir content
-  shell: ls
-  args:
-          chdir: /var/www/html/opensips-cp
-  register: contents
+  stat:
+          path: '{{ opensips_cp_dir }}'
+  register: res
 
 - name: Deploy OpenSIPS CP source
   git:
           repo: "{{ opensips_cp_git_url }}"
           dest: "{{ opensips_cp_dir }}"
           version: "{{ opensips_cp_git_branch }}"
-  when: opensips_cp_url is not defined and ( contents["stdout_lines"] | length > 0 )
+  when: res.stat.isdir is not defined
 
-- name: Deploy OpenSIPS CP source from url # asta doar am remarcat ca nu o facusem, si parea ca trebuie 
-                                           #when-ului de mai sus, dar nu mai tin minte exact, nu stiu daca are sens
-  git:
-          repo: "{{ opensips_cp_url }}"
-          dest: "{{ opensips_cp_dir }}"
-          version: "{{ opensips_cp_git_branch }}"
-
-- name: Set Apache var Debian
-  set_fact: 
-        apache_name: apache2
-  when: ansible_os_family == "Debian"
-
-- name: Set Apache var RedHat
-  set_fact:
-          apache_name: httpd
-  when: ansible_os_family == "RedHat"
-
-- name: Configure Apache Debian
+- name: Configure Apache
   template:
           src: 000-default.conf.j2
-          dest: /etc/apache2/sites-available/000-default.conf
-  when: ansible_os_family == "Debian"
-  notify: 
-        - restart apache
-
-- name: Configure Apache RedHat
-  template:
-          src: 000-default.conf.j2
-          dest: /etc/httpd/conf.d/httpd-opensips.conf
-  when: ansible_os_family == "RedHat"
+          dest: "{{ apache_dir }}httpd-opensips.conf"
   notify:
         - restart apache
 
-- name: Configure Cron
+- name: Enable site
+  shell:
+          cmd: a2ensite httpd-opensips
+  when: ansible_os_family == "Debian"
+  notify:
+        - restart apache 
+
+          #- name: Configure Cron
+          #  cron:
+          #cron_file: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
+          #user: root
+          #
+
+- name: Configure cron
   copy:
-         src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
-         dest: /etc/cron.d
-  notify:
-        - restart cron #merge doar pe debian
+          src: "{{opensips_cp_dir}}/config/tools/system/smonitor/opensips_stats_cron"
+          dest: /etc/cron.d
 
 - name: Configure database
   template:
@@ -92,5 +66,4 @@
 
 - name: Create OCP tables
   shell: 
-        cmd: "mysql -Dopensips  < {{ opensips_cp_dir }}/config/db_schema.mysql" #daca folosesc -p ca sa pot sa utilizez
-        #credentials, dar de ex. nu am parola, se blocheaza fiindca asteapta sa dau input parola dupa
+        cmd: "mysql -Dopensips  < {{ opensips_cp_dir }}/config/db_schema.mysql"

@@ -29,7 +29,7 @@ if (!isset($config)) $config = new stdClass();
  $config->db_host = "{{ opensips_cp_db_host }}";
  
  //database port - leave empty for default
- $config->db_port = "{{ opensips_cp_port | default('') }}";
+ $config->db_port = "{{ opensips_cp_db_port | default('') }}";
  
  //database connection user
  $config->db_user = "{{ opensips_cp_db_user }}";
