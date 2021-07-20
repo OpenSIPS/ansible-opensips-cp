@@ -34,23 +34,24 @@ Servers` |
 | `opensips_cp_monit_host` | Host used by the `monit` tool | Value of
 `opensips_mi_host` |
 | `opensips_cp_monit_port` | Port used by the `monit` tool | `2812` |
-| `opensips_cp_modules` | Please view [Modules
-Configuration](#modules-configuration) |
+| `opensips_cp_modules` | Please view
+[Modules Configuration](#modules-configuration) |
 [`default_opensips_cp_modules`](vars/main.yml) |
 
 Modules Configuration
 ----
 The `opensips_cp_modules` variable can be used to tune the modules that are
-being configured in OpenSIPS CP. It should be defined as a list of
-group specification. Each node is an object that has the name of the group as
-a key (`users`, `system`), and a dictionary containing one (or more) of the
-following keys:
+being configured in OpenSIPS CP. It should be defined as a dictionary where
+each element contains the specifications of a group (`users:`, `system:`).
+Each group is another dictionary that contains one (or more) of the following
+keys:
  * `name`: the name of the group, as it should appear in the web interface
  * `icon`: path to the icon that shall be used for the group
- * `modules`: a list of *key-value* objects, specifying the module to be used(
-		 Example: `[ rtpproxy: RTPProxy, monit: Monit]`)
+ * `modules`: a dictionary containing elements for each module to be used.
+		 Example: `{ rtpproxy: RTPProxy, monit: Monit}`)
 If one of the key is missing, it is taken from the
-[`default_opensips_cp_modules`](vars/main.yml) variable.
+[`default_opensips_cp_modules`](vars/main.yml) variable, if it is defined, or
+`''` otherwise.
 
 Limitations
 ----
@@ -68,6 +69,16 @@ The following is an example of a playbook that uses the `opensips_cp` role.
 - hosts: all
   roles:
     - role: opensips_cp
+```
+
+Example of `opensips_cp_modules` variable:
+```
+opensips_cp_modules:
+  system:
+    modules:
+      rtpproxy: RTPProxy
+      monit: Monit
+      smonitor: Statistics
 ```
 
 License
