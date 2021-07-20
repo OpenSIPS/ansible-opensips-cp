@@ -49,6 +49,7 @@
           src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
           dest: /etc/cron.d
           mode: 0666
+  when: opensips_cp_stats
 
 - name: Configure database
   template:

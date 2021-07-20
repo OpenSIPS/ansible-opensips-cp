@@ -9,7 +9,7 @@ opensips_cp_db_host: localhost
 opensips_mi_host: 127.0.0.1
 opensips_mi_port: 8888
 opensips_mi_root: mi
-opensips_cp_stats: 1
+opensips_cp_stats: true
 opensips_cp_host_description: SIP server
 opensips_cp_host_name: SIP server
 opensips_cp_monit_host: '{{ opensips_mi_host }}'
