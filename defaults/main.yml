@@ -11,6 +11,7 @@ opensips_mi_port: 8888
 opensips_mi_root: mi
 opensips_cp_stats: true
 opensips_cp_host_description: SIP server
-opensips_cp_host_name: SIP server
+opensips_cp_system_name: SIP servers
+opensips_cp_system_description: OpenSIPS SIP server cluster
 opensips_cp_monit_host: '{{ opensips_mi_host }}'
 opensips_cp_monit_port: 2812
