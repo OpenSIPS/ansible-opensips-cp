@@ -4,7 +4,7 @@
 
 - name: Install prerequisites
   package:
-          name: "{{ dependencies }}"
+          name: "{{ opensips_cp_dependencies }}"
           state: present
 
 - name: Check opensips-cp dir content

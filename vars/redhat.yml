@@ -1,10 +1,12 @@
-dependencies:
-        - httpd
-        - php
-        - php-mysqlnd
-        - php-gd
-        - php-pear
-        - php-pecl-apcu
-        - git
+---
+opensips_cp_dependencies:
+  - httpd
+  - php
+  - php-mysqlnd
+  - php-gd
+  - php-pear
+  - php-pecl-apcu
+  - git
+
 apache_name: httpd
 apache_dir: /etc/httpd/conf.d/

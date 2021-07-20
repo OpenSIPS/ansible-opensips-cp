@@ -1,23 +1,4 @@
 ---
-debian_dependencies:
-  - apache2
-  - libapache2-mod-php
-  - php-curl
-  - php
-  - php-mysql
-  - php-gd
-  - php-pear
-  - php-apcu
-  - php-cli
-
-redhat_dependencies:
-  - httpd
-  - php
-  - php-mysqlnd
-  - php-gd
-  - php-pear
-  - php-pecl-apcu
-
 opensips_cp_git_url: https://github.com/OpenSIPS/opensips-cp
 opensips_cp_dir: /var/www/html/opensips-cp
 opensips_cp_git_branch: master

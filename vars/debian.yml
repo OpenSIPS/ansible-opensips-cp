@@ -1,14 +1,15 @@
-dependencies:
-        - apache2
-        - libapache2-mod-php
-        - php-curl
-        - php
-        - php-mysql
-        - php-gd
-        - php-pear
-        - php-apcu
-        - php-cli
-        - git
+---
+opensips_cp_dependencies:
+  - apache2
+  - libapache2-mod-php
+  - php-curl
+  - php
+  - php-mysql
+  - php-gd
+  - php-pear
+  - php-apcu
+  - php-cli
+  - git
 
 apache_name: apache2
 apache_dir: /etc/apache2/sites-available/
