@@ -34,9 +34,7 @@ Servers` |
 | `opensips_cp_monit_host` | Host used by the `monit` tool | Value of
 `opensips_mi_host` |
 | `opensips_cp_monit_port` | Port used by the `monit` tool | `2812` |
-| `opensips_cp_modules` | Please view
-[Modules Configuration](#modules-configuration) |
-[`default_opensips_cp_modules`](vars/main.yml) |
+| `opensips_cp_modules` | Please view [Modules Configuration](#modules-configuration) | [`default_opensips_cp_modules`](vars/main.yml) |
 
 Modules Configuration
 ----
