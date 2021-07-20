@@ -20,17 +20,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-// Global configuration parameters used by more then one module
-
-
-// The permissions parameter is also used by more the one module,
-// when setting the modules permissions for a certain admin.
-// This array has 2 values that will remain unchanged: read-only 
-// and read-write.
-$config->permissions = array("read-only","read-write");
-
-// Password can be saved in plain text mode by setting 
-// $config->admin_passwd_mode to 0 or chyphered mode, by setting it to 1
-$config->admin_passwd_mode=1;
+ $login_page_title = "OpenSIPS Control Panel - Login Page";
+ $login_title = "OpenSIPS Control Panel";
+ $login_user = "Username";
+ $login_pass = "Password";
+ $login_err = "Invalid ".$login_user." / ".$login_pass;
+ $session_err = "Your Session has expired";
+ 
+ $page_title = "OpenSIPS Control Panel";
+ $header_title = ".: OpenSIPS Control Panel";
+ $copyright = "Copyright &copy; 2006-2020 OpenSIPS Project";
 
 ?>

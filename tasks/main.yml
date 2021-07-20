@@ -2,6 +2,12 @@
 - name: Gather distribution vars
   include_vars: '{{ ansible_os_family | lower }}.yml'
 
+- name: Gather group vars
+  include_vars:
+          dir: ../group_vars
+          extensions:
+                  - 'yml'
+
 - name: Install prerequisites
   package:
           name: "{{ dependencies }}"
@@ -37,7 +43,6 @@
           #  cron:
           #cron_file: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
           #user: root
-          #
 
 - name: Configure cron
   copy:
@@ -64,6 +69,24 @@
           src: boxes.global.inc.php.j2  
           dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
 
+          #- name: Create OCP tables
+          #  shell: 
+          #cmd: "mysql -Dopensips  < {{ opensips_cp_dir }}/config/db_schema.mysql"
+
+- name: Local configuration
+  template:
+          src: local.inc.php.j2
+          dest: "{{ opensips_cp_dir }}/config/local.inc.php"
+
+- name: Session configuration
+  template:
+          src: session.inc.php.j2
+          dest: "{{ opensips_cp_dir }}/config/session.inc.php"
+
 - name: Create OCP tables
-  shell: 
-        cmd: "mysql -Dopensips  < {{ opensips_cp_dir }}/config/db_schema.mysql"
+  community.mysql.mysql_db:
+          state: import
+          name: "{{ opensips_cp_db }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          target: "{{opensips_cp_dir }}/config/db_schema.mysql"  

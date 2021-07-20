@@ -1,0 +1,14 @@
+opensips_cp_modules:
+  - users:
+      name: Users
+      icon: images/icon-user.svg
+      modules:
+        - acl_management: ACL Management
+        - alias_management: Alias Management
+        - user_management: User Management
+  - system:
+      name: System
+      icon: images/icon-system.svg
+      modules:
+        - callcenter: Callcenter
+        - cdrviewer: CDR Viewer

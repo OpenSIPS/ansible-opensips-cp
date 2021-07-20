@@ -24,6 +24,10 @@ opensips_cp_db_pass: opensipsrw
 opensips_cp_db_user: opensips
 opensips_cp_db: opensips
 opensips_cp_db_host: '{{ private_ip | default("localhost")}}'
-
-
+opensips_mi_host: 127.0.0.1
+opensips_mi_port: 8888
+opensips_mi_root: mi
+opensips_cp_stats: true
+opensips_host_description: "SIP server"
+opensips_cp_name: "SIP server"
           
