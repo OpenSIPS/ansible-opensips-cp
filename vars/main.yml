@@ -12,3 +12,22 @@ opensips_cp_modules:
       modules:
         - callcenter: Callcenter
         - cdrviewer: CDR Viewer
+        - dialog: Dialog
+        - dialplan: Dialplan
+        - dispatcher: Dispatcher
+        - domains: Domains
+        - drouting: Dynamic Routing
+        - clusterer: Clusterer
+        - loadbalancer: Load Balancer
+        - mi: MI Commands
+        - monit: Monit
+        - rtpproxy: RTPProxy
+        - rtpengine: RTPEngine
+        - permissions: Permissions
+        - siptrace: SIP Trace
+        - smonitor: Statistics Monitor
+        - homer: Homer
+        - tls_mgm: TLS Management
+        - uac_registrant: UAC Registrant
+        - smpp: SMPP Gateway
+        - tviewer: TViewer
