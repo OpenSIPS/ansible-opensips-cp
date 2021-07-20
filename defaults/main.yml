@@ -1,21 +1,22 @@
+---
 debian_dependencies:
-        - apache2
-        - libapache2-mod-php
-        - php-curl
-        - php
-        - php-mysql
-        - php-gd
-        - php-pear
-        - php-apcu
-        - php-cli
+  - apache2
+  - libapache2-mod-php
+  - php-curl
+  - php
+  - php-mysql
+  - php-gd
+  - php-pear
+  - php-apcu
+  - php-cli
 
 redhat_dependencies:
-        - httpd
-        - php
-        - php-mysqlnd
-        - php-gd
-        - php-pear
-        - php-pecl-apcu
+  - httpd
+  - php
+  - php-mysqlnd
+  - php-gd
+  - php-pear
+  - php-pecl-apcu
 
 opensips_cp_git_url: https://github.com/OpenSIPS/opensips-cp
 opensips_cp_dir: /var/www/html/opensips-cp
@@ -23,12 +24,12 @@ opensips_cp_git_branch: master
 opensips_cp_db_pass: opensipsrw
 opensips_cp_db_user: opensips
 opensips_cp_db: opensips
-opensips_cp_db_host: '{{ private_ip | default("localhost")}}'
+opensips_cp_db_host: localhost
 opensips_mi_host: 127.0.0.1
 opensips_mi_port: 8888
 opensips_mi_root: mi
 opensips_cp_stats: 1
-opensips_cp_host_description: "SIP server"
-opensips_cp_host_name: "SIP server"
-opensips_cp_monit_host: 127.0.0.1
+opensips_cp_host_description: SIP server
+opensips_cp_host_name: SIP server
+opensips_cp_monit_host: '{{ opensips_mi_host }}'
 opensips_cp_monit_port: 2812
