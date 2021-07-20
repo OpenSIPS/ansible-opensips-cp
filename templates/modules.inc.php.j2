@@ -36,13 +36,15 @@ $config_modules 	= array (
 		),
 	),
 	{% for module1Dict in opensips_cp_modules %} 
-        {-% for module1Key in mode %}
+        {%- for module1Key in module1Dict %}
 
         "{{ module1Key }}"             => array (
 		"enabled"       => true,
-		"name"          => "{{ module1Dict[module1Key]['name'] }}"
-	        {% if modul1Dict[module1Key]['icon'] is defined -%}
-		"icon"          => "{{ module1Dict[module1Key]['icon'] }}"
+		{% if module1Dict[module1Key]['name'] is defined -%}
+		"name"          => "{{ module1Dict[module1Key]['name'] }}",
+		{% endif -%}
+	        {% if module1Dict[module1Key]['icon'] is defined -%}
+		"icon"          => "{{ module1Dict[module1Key]['icon'] }}",
 		{% endif -%}
 		"modules"       => array (
 			{%- for module2Dict in module1Dict[module1Key]['modules'] %}

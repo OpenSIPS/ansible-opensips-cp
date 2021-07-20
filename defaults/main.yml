@@ -15,8 +15,8 @@ redhat_dependencies:
         - php-mysqlnd
         - php-gd
         - php-pear
-        - php-pecl-apcu #in documentatie e php-pecl-apc
-       
+        - php-pecl-apcu
+
 opensips_cp_git_url: https://github.com/OpenSIPS/opensips-cp
 opensips_cp_dir: /var/www/html/opensips-cp
 opensips_cp_git_branch: master
@@ -27,7 +27,8 @@ opensips_cp_db_host: '{{ private_ip | default("localhost")}}'
 opensips_mi_host: 127.0.0.1
 opensips_mi_port: 8888
 opensips_mi_root: mi
-opensips_cp_stats: true
-opensips_host_description: "SIP server"
-opensips_cp_name: "SIP server"
-          
+opensips_cp_stats: 1
+opensips_cp_host_description: "SIP server"
+opensips_cp_host_name: "SIP server"
+opensips_cp_monit_host: 127.0.0.1
+opensips_cp_monit_port: 2812

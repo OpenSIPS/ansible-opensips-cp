@@ -26,17 +26,17 @@
 $box_id=0;
 
 //  MI connector (via JSON backend):   json:host:port/mi
-$boxes[$box_id]['mi']['conn']="json:'{{ opensips_mi_host }}':'{{ opensips_mi_port }}'/'{{ opensips_mi_root }}'";
+$boxes[$box_id]['mi']['conn']="json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}";
 
 // monit host:port
-$boxes[$box_id]['monit']['conn']="127.0.0.1:2812";
+$boxes[$box_id]['monit']['conn']="{{opensips_cp_monit_host}}:{{opensips_cp_monit_port}}";
 $boxes[$box_id]['monit']['user']="admin";
 $boxes[$box_id]['monit']['pass']="admin";
 $boxes[$box_id]['monit']['has_ssl']=1;
 
 
 // description (appears in mi , monit )
-$boxes[$box_id]['desc']="{{ opensips_host_description }}";
+$boxes[$box_id]['desc']="{{ opensips_cp_host_description }}";
 
  
 $boxes[$box_id]['assoc_id']=1;
@@ -80,8 +80,8 @@ $boxes[$box_id]['smonitor']['charts']=1;
 // Presence agents, etc)
 
 $_system_id=0;
-$systems[$_system_id]['name']="{{ opensips_cp_name }}";
-$systems[$_system_id]['desc']="{{ opensips_cp_description }}";
+$systems[$_system_id]['name']="{{ opensips_cp_host_name }}";
+$systems[$_system_id]['desc']="{{ opensips_cp_host_description }}";
 //boxes with this assoc_id are assigned to this system
 $systems[$_system_id]['assoc_id']=1;
 
