@@ -1,60 +1,60 @@
 ---
-- name: Gather distribution vars
-  include_vars: '{{ ansible_os_family | lower }}.yml'
+#- name: Gather distribution vars
+#  include_vars: '{{ ansible_os_family | lower }}.yml'
 
-- name: Install prerequisites
-  package:
-          name: "{{ dependencies }}"
-          state: present
+#- name: Install prerequisites
+#  package:
+#          name: "{{ dependencies }}"
+#          state: present
 
-- name: Check opensips-cp dir content
-  stat:
-          path: '{{ opensips_cp_dir }}'
-  register: res
-
-- name: Deploy OpenSIPS CP source
-  git:
-          repo: "{{ opensips_cp_git_url }}"
-          dest: "{{ opensips_cp_dir }}"
-          version: "{{ opensips_cp_git_branch }}"
-  when: res.stat.isdir is not defined
-
-- name: Configure Apache
-  template:
-          src: 000-default.conf.j2
-          dest: "{{ apache_dir }}httpd-opensips.conf"
-          mode: 0666
-  notify:
-          - restart apache
-
-- name: Enable site
-  command: a2ensite httpd-opensips
-  when: ansible_os_family == "Debian"
-  notify:
-          - restart apache
-
-- name: Disable default site
-  command: a2dissite 000-default
-  when: ansible_os_family == "Debian"
-  notify:
-          - restart apache
+#- name: Check opensips-cp dir content
+#  stat:
+#          path: '{{ opensips_cp_dir }}'
+#  register: res
+#
+#- name: Deploy OpenSIPS CP source
+#  git:
+#          repo: "{{ opensips_cp_git_url }}"
+#          dest: "{{ opensips_cp_dir }}"
+#          version: "{{ opensips_cp_git_branch }}"
+#  when: res.stat.isdir is not defined
+#
+#- name: Configure Apache
+#  template:
+#          src: 000-default.conf.j2
+#          dest: "{{ apache_dir }}httpd-opensips.conf"
+#          mode: 0666
+#  notify:
+#          - restart apache
+#
+#- name: Enable site
+#  command: a2ensite httpd-opensips
+#  when: ansible_os_family == "Debian"
+#  notify:
+#          - restart apache
+#
+#- name: Disable default site
+#  command: a2dissite 000-default
+#  when: ansible_os_family == "Debian"
+#  notify:
+#          - restart apache
 
           # - name: Configure Cron
           #  cron:
           # cron_file: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
           # user: root
-
-- name: Configure cron
-  copy:
-          src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
-          dest: /etc/cron.d
-          mode: 0666
-
-- name: Configure database
-  template:
-          src: db.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/db.inc.php"
-          mode: 0666
+          #
+#- name: Configure cron
+#  copy:
+#          src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
+#          dest: /etc/cron.d
+#          mode: 0666
+#
+#- name: Configure database
+#  template:
+#          src: db.inc.php.j2
+#          dest: "{{ opensips_cp_dir }}/config/db.inc.php"
+#          mode: 0666
 
 - name: Configure modules
   template:
