@@ -92,7 +92,7 @@
   when: opensips_cp_db_engine == 'mysql'
 
 - name: Create postgres OCP tables
-  community.mysql.postgresql_db:
+  community.general.postgresql_db:
           state: import
           name: "{{ opensips_cp_db }}"
           login_user: "{{ opensips_cp_db_user }}"
