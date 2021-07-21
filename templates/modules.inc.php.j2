@@ -24,7 +24,7 @@
 ### List with all the available modules - you can enable and disable module from here
 
 $config_modules 	= array (
-	"admin"                 => array (
+	"admin"				=> array (
 		"enabled"       => true,
 		"settings"      => true,
 		"name"          => "Admin",
@@ -32,28 +32,37 @@ $config_modules 	= array (
 			"list_admins"	=> array (
 				"enabled"	=> true,
 				"name"		=> "Admins"
+				),
 			),
 		),
-	),
 	{% set dict1=opensips_cp_modules | d(default_opensips_cp_modules) %}
 	{%- for module1Key in dict1 %}
 
-	"{{ module1Key }}"           => array (
-                "enabled"       => true,
-                "name"          => "{{ dict1[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
+	"{{ module1Key }}"	=> array (
+		"enabled"       => true,
+		"name"          => "{{ dict1[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
 		"icon"          => "{{ dict1[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
 		"modules"       => array (
-	{%- set dict2=dict1[module1Key]['modules'] %}
-	{%- for module2Key in dict2 %}
+			{%- set dict2=dict1[module1Key]['modules'] %}
+			{%- for module2Key in dict2 %}
 
-                     "{{ module2Key }}"   => array (
-                                "enabled"         => true,
-				"name"            => "{{ dict2[module2Key] | d(default_opensips_cp_modules[module1Key]['modules'][module2Key]) }}"
-		        ),{% endfor %}
+			"{{ module2Key }}"   => array (
+				"enabled"         => true,
+				{% if dict2[module2Key] is mapping -%}
+				{% if dict2[module2Key].path is defined -%}
+				"path"            => "{{ dict2[module2Key].path }}",
+				{% endif -%}
+				"name"            => "{{ dict2[module2Key].name | d(default_opensips_cp_modules[module1Key]['modules'][module2Key]) }}"
+				{% elif not dict2[module2Key] -%}
+				"name"            => "{{ default_opensips_cp_modules[module1Key]['modules'][module2Key] | d(module2Key)}}"
+				{% else -%}
+				"name"            => "{{ dict2[module2Key] | d(module2Key) }}"
+				{% endif -%}
+				),{% endfor %}
 
-		), 
-	),
-	{% endfor %}
+			),
+		),
+{% endfor %}
 
 );
 

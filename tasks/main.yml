@@ -57,6 +57,7 @@
           src: modules.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
           mode: 0666
+  tags: mods
 
 - name: Configure global options
   template:

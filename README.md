@@ -45,7 +45,11 @@ keys:
 		 Example: `{ rtpproxy: RTPProxy, monit: Monit}`)
 If one of the key is missing, it is taken from the
 [`default_opensips_cp_modules`](vars/main.yml) variable, if it is defined, or
-`''` otherwise.
+`''` otherwise. Each module can also be built as a dictionary, containg one of
+the following keys:
+   * `name`: The name of the module - if missing the default name is used
+   * `path`: The path where the module can be fonud - if missing path is not
+   provisioned
 
 Limitations
 ----
@@ -72,6 +76,22 @@ opensips_cp_modules:
       rtpproxy: RTPProxy
       monit: Monit
       smonitor: Statistics
+```
+
+Example of `opensips_cp_modules` specifying the module's path:
+```
+opensips_cp_modules:
+  system:
+    modules:
+      monit: Monit
+      smonitor: Statistics
+  media:
+    name: Media
+    icon: images/icon-media.svg
+    modules:
+      rtpproxy:
+        name: RTPProxy
+        path: system/rtpproxy
 ```
 
 License
