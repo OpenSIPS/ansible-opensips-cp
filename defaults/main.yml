@@ -15,3 +15,4 @@ opensips_cp_system_name: SIP servers
 opensips_cp_system_description: OpenSIPS SIP server cluster
 opensips_cp_monit_host: '{{ opensips_mi_host }}'
 opensips_cp_monit_port: 2812
+opensips_cp_db_engine: mysql

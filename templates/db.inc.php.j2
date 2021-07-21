@@ -23,7 +23,7 @@
 if (!isset($config)) $config = new stdClass();
 
  //database driver mysql or pgsql
- $config->db_driver = "mysql";
+ $config->db_driver = "{{ opensips_cp_db_engine }}";
 
  //database host
  $config->db_host = "{{ opensips_cp_db_host }}";

@@ -39,11 +39,6 @@
   notify:
           - restart apache
 
-          # - name: Configure Cron
-          #  cron:
-          # cron_file: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
-          # user: root
-
 - name: Configure cron
   copy:
           src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
@@ -87,10 +82,22 @@
           dest: "{{ opensips_cp_dir }}/config/session.inc.php"
           mode: 0666
 
-- name: Create OCP tables
+- name: Create mysql OCP tables
   community.mysql.mysql_db:
           state: import
           name: "{{ opensips_cp_db }}"
           login_user: "{{ opensips_cp_db_user }}"
           login_password: "{{ opensips_cp_db_pass }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.mysql"
+  when: opensips_cp_db_engine == 'mysql'
+
+- name: Create postgres OCP tables
+  community.mysql.postgresql_db:
+          state: import
+          name: "{{ opensips_cp_db }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
+  when: opensips_cp_db_engine == 'postgres'
+
+

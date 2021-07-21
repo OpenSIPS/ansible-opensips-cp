@@ -1,33 +1,33 @@
-opensips_cp_modules:
-  - users:
+default_opensips_cp_modules:
+  users:
       name: Users
       icon: images/icon-user.svg
       modules:
-        - acl_management: ACL Management
-        - alias_management: Alias Management
-        - user_management: User Management
-  - system:
+        acl_management: ACL Management
+        alias_management: Alias Management
+        user_management: User Management
+  system:
       name: System
       icon: images/icon-system.svg
       modules:
-        - callcenter: Callcenter
-        - cdrviewer: CDR Viewer
-        - dialog: Dialog
-        - dialplan: Dialplan
-        - dispatcher: Dispatcher
-        - domains: Domains
-        - drouting: Dynamic Routing
-        - clusterer: Clusterer
-        - loadbalancer: Load Balancer
-        - mi: MI Commands
-        - monit: Monit
-        - rtpproxy: RTPProxy
-        - rtpengine: RTPEngine
-        - permissions: Permissions
-        - siptrace: SIP Trace
-        - smonitor: Statistics Monitor
-        - homer: Homer
-        - tls_mgm: TLS Management
-        - uac_registrant: UAC Registrant
-        - smpp: SMPP Gateway
-        - tviewer: TViewer
+        callcenter: Callcenter
+        cdrviewer: CDR Viewer
+        dialog: Dialog
+        dialplan: Dialplan
+        dispatcher: Dispatcher
+        domains: Domains
+        drouting: Dynamic Routing
+        clusterer: Clusterer
+        loadbalancer: Load Balancer
+        mi: MI Commands
+        monit: Monit
+        rtpproxy: RTPProxy
+        rtpengine: RTPEngine
+        permissions: Permissions
+        siptrace: SIP Trace
+        smonitor: Statistics Monitor
+        homer: Homer
+        tls_mgm: TLS Management
+        uac_registrant: UAC Registrant
+        smpp: SMPP Gateway
+        tviewer: TViewer

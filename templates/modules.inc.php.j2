@@ -35,33 +35,25 @@ $config_modules 	= array (
 			),
 		),
 	),
-	{% for module1Dict in opensips_cp_modules %} 
-        {%- for module1Key in module1Dict %}
+	{% set dict1=opensips_cp_modules | d(default_opensips_cp_modules) %}
+	{%- for module1Key in dict1 %}
 
-        "{{ module1Key }}"             => array (
-		"enabled"       => true,
-		{% if module1Dict[module1Key]['name'] is defined -%}
-		"name"          => "{{ module1Dict[module1Key]['name'] }}",
-		{% endif -%}
-	        {% if module1Dict[module1Key]['icon'] is defined -%}
-		"icon"          => "{{ module1Dict[module1Key]['icon'] }}",
-		{% endif -%}
+	"{{ module1Key }}"           => array (
+                "enabled"       => true,
+                "name"          => "{{ dict1[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
+		"icon"          => "{{ dict1[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
 		"modules"       => array (
-			{%- for module2Dict in module1Dict[module1Key]['modules'] %}
-			{%- for module2Key in module2Dict %}
+	{%- set dict2=dict1[module1Key]['modules'] %}
+	{%- for module2Key in dict2 %}
 
-			"{{ module2Key }}"  => array (
-				"enabled"                 => true,
-				"name"                    => "{{ module2Dict[module2Key] }}"
-			),
-			{% endfor %}
-			{%- endfor %}
+                     "{{ module2Key }}"   => array (
+                                "enabled"         => true,
+				"name"            => "{{ dict2[module2Key] | d(default_opensips_cp_modules[module1Key]['modules'][module2Key]) }}"
+		        ),{% endfor %}
 
-		),
-	
-        ),
+		), 
+	),
 	{% endfor %}
-	{%- endfor %}
 
 );
 
