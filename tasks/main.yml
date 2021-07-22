@@ -87,6 +87,7 @@
           name: "{{ opensips_cp_db }}"
           login_user: "{{ opensips_cp_db_user }}"
           login_password: "{{ opensips_cp_db_pass }}"
+          login_port: "{{ opensips_cp_db_port | d(omit) }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.mysql"
   when: opensips_cp_db_engine == 'mysql'
 
@@ -96,21 +97,26 @@
           name: "{{ opensips_cp_db }}"
           login_user: "{{ opensips_cp_db_user }}"
           login_password: "{{ opensips_cp_db_pass }}"
+          login_port: "{{ opensips_cp_db_port | d(omit) }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
   when: opensips_cp_db_engine == 'postgres'
 
 - name: Set admin password with mysql engine
   community.mysql.mysql_query:
           login_db: "{{ opensips_cp_db }}"
-          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin"; SELECT pg_affected_rows();
+          login_host: "{{ opensips_cp_db_host }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          login_port: "{{ opensips_cp_db_port | d(omit) }}"
+          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin";
   when: opensips_cp_db_engine == 'mysql'
-  register: cluster_result
-  changed_when: cluster_result['changed'] == true
 
 - name: Set admin password with postgres engine
   community.postgresql.postgresql_query:
           db: "{{ opensips_cp_db }}"
-          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin"; SELECT pg_affected_rows();
+          login_host: "{{ opensips_cp_db_host }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          port: "{{ opensips_cp_db_port | d(omit) }}"
+          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin";
   when: opensips_cp_db_engine == 'postgres'
-  register: cluster_result
-  changed_when: cluster_result['changed'] == true
