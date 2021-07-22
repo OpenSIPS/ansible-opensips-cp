@@ -33,3 +33,4 @@ opensips_cp_host_name: "SIP server"
 opensips_cp_monit_host: 127.0.0.1
 opensips_cp_monit_port: 2812
 opensips_cp_db_engine: mysql
+opensips_cp_admin_pass: 'opensips'
