@@ -18,9 +18,11 @@ The following variables can be set to tune the role's install behavior:
 | `opensips_cp_dir` | the directory where the source files should be installed | `/var/www/html/opensips-cp` |
 | `opensips_cp_db_engine` | Database engine to be used (currently only `mysql` and `postgres` is supported) | `mysql` |
 | `opensips_cp_db_host` | Database host | `localhost` |
+| `opensips_cp_db_port` | Database port | not used |
 | `opensips_cp_db_user` | Database user | `opensips` |
 | `opensips_cp_db_pass` | Database password | `opensipsrw` |
 | `opensips_cp_db` | Database name | `opensips` |
+| `opensips_cp_pass` | Password for the default `admin` user | `opensips` |
 | `opensips_cp_stats` | Controls whether stats should be gathered | `true` |
 | `opensips_cp_host_description` | Description of the OpenSIPS CP host | `SIP server` |
 | `opensips_cp_system_name` | Name of the OpenSIPS CP system | `SIP Servers` |
