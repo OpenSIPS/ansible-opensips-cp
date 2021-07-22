@@ -12,11 +12,19 @@
           path: '{{ opensips_cp_dir }}'
   register: res
 
+- name: Create opensips-cp dir
+  file:
+          path: '{{ opensips_cp_dir }}'
+          state: directory
+
 - name: Deploy OpenSIPS CP source
-  git:
-          repo: "{{ opensips_cp_git_url }}"
+  unarchive:
+          src: "{{ opensips_cp_url }}"
           dest: "{{ opensips_cp_dir }}"
-          version: "{{ opensips_cp_git_branch }}"
+          remote_src: yes
+          extra_opts:
+                  - --strip
+                  - '1'
   when: res.stat.isdir is not defined
 
 - name: Configure Apache
