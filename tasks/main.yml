@@ -4,36 +4,37 @@
 
 - name: Install prerequisites
   package:
-          name: "{{ opensips_cp_dependencies }}"
-          state: present
+    name: "{{ opensips_cp_dependencies }}"
+    state: present
 
 - name: Check opensips-cp dir content
   stat:
-          path: '{{ opensips_cp_dir }}'
+    path: '{{ opensips_cp_dir }}'
   register: res
 
 - name: Create opensips-cp dir
   file:
-          path: '{{ opensips_cp_dir }}'
-          state: directory
+    path: '{{ opensips_cp_dir }}'
+    state: directory
+    mode: 0755
 
 - name: Deploy OpenSIPS CP source
   unarchive:
-          src: "{{ opensips_cp_url }}"
-          dest: "{{ opensips_cp_dir }}"
-          remote_src: yes
-          extra_opts:
-                  - --strip
-                  - '1'
+    src: "{{ opensips_cp_url }}"
+    dest: "{{ opensips_cp_dir }}"
+    remote_src: true
+    extra_opts:
+      - --strip
+      - '1'
   when: res.stat.isdir is not defined
 
 - name: Configure Apache
   template:
-          src: 000-default.conf.j2
-          dest: "{{ apache_dir }}httpd-opensips.conf"
-          mode: 0666
+    src: 000-default.conf.j2
+    dest: "{{ apache_dir }}httpd-opensips.conf"
+    mode: 0666
   notify:
-          - restart apache
+    - restart apache
 
 - name: Enable site
   command: a2ensite httpd-opensips
@@ -41,7 +42,7 @@
   register: enable_res
   changed_when: "'already' not in enable_res.stdout"
   notify:
-          - restart apache
+    - restart apache
 
 - name: Disable default site
   command: a2dissite 000-default
@@ -49,112 +50,112 @@
   register: disable_res
   changed_when: "'already' not in disable_res.stdout"
   notify:
-          - restart apache
+    - restart apache
 
 - name: Configure cron
   copy:
-          src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
-          dest: /etc/cron.d
-          mode: 0666
+    src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
+    dest: /etc/cron.d
+    mode: 0666
   when: opensips_cp_stats
 
 - name: Configure database
   template:
-          src: db.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/db.inc.php"
-          mode: 0666
+    src: db.inc.php.j2
+    dest: "{{ opensips_cp_dir }}/config/db.inc.php"
+    mode: 0666
 
 - name: Configure modules
   template:
-          src: modules.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
-          mode: 0666
+    src: modules.inc.php.j2
+    dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
+    mode: 0666
   tags: mods
 
 - name: Configure global options
   template:
-          src: globals.php.j2
-          dest: "{{ opensips_cp_dir }}/config/globals.php"
-          mode: 0666
+    src: globals.php.j2
+    dest: "{{ opensips_cp_dir }}/config/globals.php"
+    mode: 0666
 
 - name: Boxes definition
   template:
-          src: boxes.global.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
-          mode: 0666
+    src: boxes.global.inc.php.j2
+    dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
+    mode: 0666
 
 - name: Local configuration
   template:
-          src: local.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/local.inc.php"
-          mode: 0666
+    src: local.inc.php.j2
+    dest: "{{ opensips_cp_dir }}/config/local.inc.php"
+    mode: 0666
 
 - name: Session configuration
   template:
-          src: session.inc.php.j2
-          dest: "{{ opensips_cp_dir }}/config/session.inc.php"
-          mode: 0666
+    src: session.inc.php.j2
+    dest: "{{ opensips_cp_dir }}/config/session.inc.php"
+    mode: 0666
 
 - name: Check mysql OCP tables
   community.mysql.mysql_query:
-          login_db: "{{ opensips_cp_db }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          login_port: "{{ opensips_cp_db_port | d(omit) }}"
-          query: SHOW TABLES LIKE 'ocp_admin_privileges'
+    login_db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: SHOW TABLES LIKE 'ocp_admin_privileges'
   when: opensips_cp_db_engine == 'mysql'
   register: tables_mysql_res
 
 - name: Check postgres OCP tables
   community.postgresql.postgresql_query:
-          db: "{{ opensips_cp_db }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          port: "{{ opensips_cp_db_port | d(omit) }}"
-          query: SHOW TABLES LIKE 'ocp_admin_privileges'
+    db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: SHOW TABLES LIKE 'ocp_admin_privileges'
   when: opensips_cp_db_engine == 'postgres'
   register: tables_postgres_res
 
 - name: Create mysql OCP tables
   community.mysql.mysql_db:
-          state: import
-          name: "{{ opensips_cp_db }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          login_port: "{{ opensips_cp_db_port | d(omit) }}"
-          target: "{{ opensips_cp_dir }}/config/db_schema.mysql"
+    state: import
+    name: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    target: "{{ opensips_cp_dir }}/config/db_schema.mysql"
   when: opensips_cp_db_engine == 'mysql' and tables_mysql_res.rowcount[0] == 0
 
 - name: Create postgres OCP tables
   community.postgresql.postgresql_db:
-          state: import
-          name: "{{ opensips_cp_db }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          login_port: "{{ opensips_cp_db_port | d(omit) }}"
-          target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
+    state: import
+    name: "{{ opensips_cp_db }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
   when: opensips_cp_db_engine == 'postgres' and tables_postgres_res.rowcount == 0
 
 - name: Set admin password with mysql engine
   community.mysql.mysql_query:
-          login_db: "{{ opensips_cp_db }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          login_port: "{{ opensips_cp_db_port | d(omit) }}"
-          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin";
+    login_db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5("admin:{{ opensips_cp_admin_pass }}") WHERE username = "admin";
   when: opensips_cp_db_engine == 'mysql'
 
 - name: Set admin password with postgres engine
   community.postgresql.postgresql_query:
-          db: "{{ opensips_cp_db }}"
-          login_host: "{{ opensips_cp_db_host }}"
-          login_user: "{{ opensips_cp_db_user }}"
-          login_password: "{{ opensips_cp_db_pass }}"
-          port: "{{ opensips_cp_db_port | d(omit) }}"
-          query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5( "admin:{{ opensips_cp_admin_pass }}" ) WHERE username = "admin";
+    db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5("admin:{{ opensips_cp_admin_pass }}") WHERE username = "admin";
   when: opensips_cp_db_engine == 'postgres'
