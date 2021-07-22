@@ -91,6 +91,28 @@
           dest: "{{ opensips_cp_dir }}/config/session.inc.php"
           mode: 0666
 
+- name: Check mysql OCP tables
+  community.mysql.mysql_query:
+          login_db: "{{ opensips_cp_db }}"
+          login_host: "{{ opensips_cp_db_host }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          login_port: "{{ opensips_cp_db_port | d(omit) }}"
+          query: SHOW TABLES LIKE 'ocp_admin_privileges'
+  when: opensips_cp_db_engine == 'mysql'
+  register: tables_res
+
+- name: Check postgres OCP tables
+  community.postgresql.postgresql_query:
+          db: "{{ opensips_cp_db }}"
+          login_host: "{{ opensips_cp_db_host }}"
+          login_user: "{{ opensips_cp_db_user }}"
+          login_password: "{{ opensips_cp_db_pass }}"
+          port: "{{ opensips_cp_db_port | d(omit) }}"
+          query: SHOW TABLES LIKE 'ocp_admin_privileges'
+  when: opensips_cp_db_engine == 'postgres'
+  register: tables_res
+
 - name: Create mysql OCP tables
   community.mysql.mysql_db:
           state: import
@@ -100,7 +122,7 @@
           login_password: "{{ opensips_cp_db_pass }}"
           login_port: "{{ opensips_cp_db_port | d(omit) }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.mysql"
-  when: opensips_cp_db_engine == 'mysql'
+  when: opensips_cp_db_engine == 'mysql' and tables_res.rowcount == [0]
 
 - name: Create postgres OCP tables
   community.postgresql.postgresql_db:
@@ -111,7 +133,7 @@
           login_password: "{{ opensips_cp_db_pass }}"
           login_port: "{{ opensips_cp_db_port | d(omit) }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
-  when: opensips_cp_db_engine == 'postgres'
+  when: opensips_cp_db_engine == 'postgres' and tables_res.rowcount == [0]
 
 - name: Set admin password with mysql engine
   community.mysql.mysql_query:
