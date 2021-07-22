@@ -87,6 +87,7 @@
   community.mysql.mysql_db:
           state: import
           name: "{{ opensips_cp_db }}"
+          login_host: "{{ opensips_cp_db_host }}"
           login_user: "{{ opensips_cp_db_user }}"
           login_password: "{{ opensips_cp_db_pass }}"
           login_port: "{{ opensips_cp_db_port | d(omit) }}"
@@ -98,6 +99,7 @@
           state: import
           name: "{{ opensips_cp_db }}"
           login_user: "{{ opensips_cp_db_user }}"
+          login_host: "{{ opensips_cp_db_host }}"
           login_password: "{{ opensips_cp_db_pass }}"
           login_port: "{{ opensips_cp_db_port | d(omit) }}"
           target: "{{ opensips_cp_dir }}/config/db_schema.pgsql"
