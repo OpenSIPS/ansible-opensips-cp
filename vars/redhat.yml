@@ -10,3 +10,4 @@ opensips_cp_dependencies:
 
 apache_name: httpd
 apache_dir: /etc/httpd/conf.d/
+opensips_cp_user: apache
