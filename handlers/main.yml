@@ -1,11 +1,10 @@
 ---
-
 - name: restart apache
   service:
-          name: "{{ apache_name }}"
-          state: restarted
+    name: "{{ apache_name }}"
+    state: restarted
 
 - name: restart cron
   service:
-          name: cron
-          state: restarted
+    name: cron
+    state: restarted
