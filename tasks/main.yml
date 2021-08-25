@@ -31,7 +31,8 @@
   template:
           src: 000-default.conf.j2
           dest: "{{ apache_dir }}httpd-opensips.conf"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
   notify:
           - restart apache
 
@@ -55,45 +56,52 @@
   copy:
           src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
           dest: /etc/cron.d
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
   when: opensips_cp_stats
 
 - name: Configure database
   template:
           src: db.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/db.inc.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
 
 - name: Configure modules
   template:
           src: modules.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
   tags: mods
 
 - name: Configure global options
   template:
           src: globals.php.j2
           dest: "{{ opensips_cp_dir }}/config/globals.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
 
 - name: Boxes definition
   template:
           src: boxes.global.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
 
 - name: Local configuration
   template:
           src: local.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/local.inc.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
 
 - name: Session configuration
   template:
           src: session.inc.php.j2
           dest: "{{ opensips_cp_dir }}/config/session.inc.php"
-          mode: 0666
+          mode: 0644
+          owner: "{{ user_name }}"
 
 - name: Check mysql OCP tables
   community.mysql.mysql_query:
