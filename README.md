@@ -15,6 +15,7 @@ Role Variables
 The following variables can be set to tune the role's install behavior:
 | Variable | Description | Default |
 | -------- | ----------- | ------- |
+| `opensips_cp_version` | the (git) version to install | `master` |
 | `opensips_cp_dir` | the directory where the source files should be installed | `/var/www/html/opensips-cp` |
 | `opensips_cp_db_engine` | Database engine to be used (currently only `mysql` and `postgres` is supported) | `mysql` |
 | `opensips_cp_db_host` | Database host | `localhost` |
