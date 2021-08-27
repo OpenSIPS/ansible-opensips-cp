@@ -1,0 +1,14 @@
+---
+opensips_cp_dependencies:
+  - apache2
+  - apache2-mod_php7
+  - php7-curl
+  - php7
+  - php7-mysql
+  - php7-gd
+  - php7-pear
+  - python2-mysqlclient
+
+apache_name: apache2
+apache_dir: /etc/apache2/vhosts.d/
+opensips_cp_user: wwwrun
