@@ -59,6 +59,7 @@
     dest: /etc/cron.d
     mode: 0644
     owner: "{{ opensips_cp_user }}"
+    remote-src: yes
   when: opensips_cp_stats
 
 - name: Configure database
