@@ -54,9 +54,9 @@
     - restart apache
 
 - name: Configure cron
-  copy:
-    src: "{{ opensips_cp_dir }}/config/tools/system/smonitor/opensips_stats_cron"
-    dest: /etc/cron.d
+  template:
+    src: cron.d.j2
+    dest: "/etc/cron.d"
     mode: 0644
     owner: "{{ opensips_cp_user }}"
   when: opensips_cp_stats
@@ -167,3 +167,8 @@
     port: "{{ opensips_cp_db_port | d(omit) }}"
     query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5("admin:{{ opensips_cp_admin_pass }}") WHERE username = "admin";
   when: opensips_cp_db_engine == 'postgres'
+
+- name: Restart apache
+  service:
+    name: "{{ apache_name }}"
+    state: restarted
