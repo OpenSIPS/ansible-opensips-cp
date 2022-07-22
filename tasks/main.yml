@@ -83,13 +83,6 @@
     mode: 0644
     owner: "{{ opensips_cp_user }}"
 
-- name: Boxes definition
-  template:
-    src: boxes.global.inc.php.j2
-    dest: "{{ opensips_cp_dir }}/config/boxes.global.inc.php"
-    mode: 0644
-    owner: "{{ opensips_cp_user }}"
-
 - name: Local configuration
   template:
     src: local.inc.php.j2

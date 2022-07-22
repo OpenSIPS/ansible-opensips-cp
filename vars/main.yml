@@ -1,3 +1,6 @@
+default_opensips_cp_admin_modules:
+    list_admins: Access
+    boxes_config: Boxes
 default_opensips_cp_modules:
   users:
     name: Users
