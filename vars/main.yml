@@ -15,6 +15,7 @@ default_opensips_cp_modules:
     modules:
       callcenter: Callcenter
       cdrviewer: CDR Viewer
+      dashboard: Dashboard
       dialog: Dialog
       dialplan: Dialplan
       dispatcher: Dispatcher
@@ -28,9 +29,9 @@ default_opensips_cp_modules:
       rtpengine: RTPEngine
       permissions: Permissions
       siptrace: SIP Trace
+      tracer: Tracer
       smonitor: Statistics Monitor
-      homer: Homer
+      statusreport: Status Report
       tls_mgm: TLS Management
       uac_registrant: UAC Registrant
       smpp: SMPP Gateway
-      tviewer: TViewer
