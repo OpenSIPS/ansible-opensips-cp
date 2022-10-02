@@ -161,6 +161,26 @@
     query: UPDATE ocp_admin_privileges SET password = "{{ opensips_cp_admin_pass }}", ha1 = md5("admin:{{ opensips_cp_admin_pass }}") WHERE username = "admin";
   when: opensips_cp_db_engine == 'postgres'
 
+- name: Insert default box with mysql engine
+  community.mysql.mysql_query:
+    login_db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: INSERT INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
+  when: opensips_cp_db_engine == 'mysql'
+
+- name: Insert default box with postgres engine
+  community.mysql.mysql_query:
+    login_db: "{{ opensips_cp_db }}"
+    login_host: "{{ opensips_cp_db_host }}"
+    login_user: "{{ opensips_cp_db_user }}"
+    login_password: "{{ opensips_cp_db_pass }}"
+    login_port: "{{ opensips_cp_db_port | d(omit) }}"
+    query: INSERT INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
+  when: opensips_cp_db_engine == 'postgres'
+
 - name: Restart apache
   service:
     name: "{{ apache_name }}"
