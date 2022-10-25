@@ -1,6 +1,7 @@
 default_opensips_cp_admin_modules:
     list_admins: Access
     boxes_config: Boxes
+    db_config: DB config
 default_opensips_cp_modules:
   users:
     name: Users
