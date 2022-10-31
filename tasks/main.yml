@@ -168,7 +168,7 @@
     login_user: "{{ opensips_cp_db_user }}"
     login_password: "{{ opensips_cp_db_pass }}"
     login_port: "{{ opensips_cp_db_port | d(omit) }}"
-    query: INSERT INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
+    query: REPLACE INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
   when: opensips_cp_db_engine == 'mysql'
 
 - name: Insert default box with postgres engine
