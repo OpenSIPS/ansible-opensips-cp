@@ -26,7 +26,7 @@
     extra_opts:
       - --strip
       - '1'
-  when: res.stat.isdir is not defined
+  when: res.stat.isdir is not defined or opensips_cp_force_deploy | d(false)
 
 - name: Configure Apache
   template:

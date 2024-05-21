@@ -25,6 +25,7 @@ The following variables can be set to tune the role's install behavior:
 | `opensips_cp_db` | Database name | `opensips` |
 | `opensips_cp_pass` | Password for the default `admin` user | `opensips` |
 | `opensips_cp_stats` | Controls whether stats should be gathered | `true` |
+| `opensips_cp_force_deploy` | Forces a deployment with the latest code | `false` |
 | `opensips_cp_host_description` | Description of the OpenSIPS CP host | `SIP server` |
 | `opensips_cp_system_name` | Name of the OpenSIPS CP system | `SIP Servers` |
 | `opensips_cp_system_description` | Description of the OpenSIPS CP system | `OpenSIPS SIP server cluster` |
