@@ -74,7 +74,8 @@
     dest: "{{ opensips_cp_dir }}/config/modules.inc.php"
     mode: 0644
     owner: "{{ opensips_cp_user }}"
-  tags: mods
+  tags:
+    - opensips-cp-modules
 
 - name: Configure global options
   template:
