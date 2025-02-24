@@ -1,0 +1,29 @@
+---
+- name: 'Create {{ tviewer_module }} module directories'
+  file:
+    state: directory
+    path: '{{ opensips_cp_dir }}/{{ item }}/tools/{{ tviewer_path }}/'
+    recurse: true
+  loop:
+    - web
+    - config
+
+- name: 'Deploy {{ tviewer_module }} index file'
+  template:
+    src: tviewer.index.php.j2
+    dest: '{{ opensips_cp_dir }}/web/tools/{{ tviewer_path }}/index.php'
+
+- name: 'Deploy {{ tviewer_module }} config files'
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ opensips_cp_dir }}/config/tools/{{ tviewer_path }}/{{ item.dest }}'
+  loop: '{{ tviewer_config_files + tviewer_config.tviewer_extra_files | d([]) }}'
+  vars:
+    tviewer_config_files:
+      - src: '{{ tviewer_config.tviewer_config }}'
+        dest: tviewer.inc.php
+      - src: '{{ tviewer_config.tviewer_settings_file | d("tviewer.settings.php.j2") }}'
+        dest: settings.inc.php
+      - src: tviewer.db.php.j2
+        dest: db.inc.php
+

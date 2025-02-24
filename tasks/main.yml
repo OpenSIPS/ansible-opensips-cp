@@ -196,7 +196,27 @@
   when: opensips_cp_db_engine == 'postgres'
   loop: '{{ opensips_mi_boxes }}'
 
-- name: Restart apache
-  service:
-    name: "{{ apache_name }}"
-    state: restarted
+- block:
+    - name: Setup tviewer modules
+      include_tasks: tviewer.yml
+      vars:
+        tviewer_module: '{{ tviewer_item.name }}'
+        tviewer_name: '{{ tviewer_item.config.name | d(tviewer_item.name | capitalize) }}'
+        tviewer_config: '{{ tviewer_item.config }}'
+        tviewer_parent: '{{ tviewer_item.parent }}'
+        tviewer_path: '{{ tviewer_item.config.path | d(tviewer_item.parent + "/" + tviewer_item.name) }}'
+      loop_control:
+        label: '{{ tviewer_module }}'
+        loop_var: tviewer_item
+      loop: |
+        {%- set tviewer_modules=[] -%}
+        {%- for section, desc in opensips_cp_modules.items() -%}
+          {%- for name, module in desc.modules.items() -%}
+            {%- if module["tviewer_config"] is defined -%}
+              {%- set _=tviewer_modules.append({"name":name, "parent":section, "config": module}) -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+        {{ tviewer_modules }}
+  tags:
+    - opensips-cp-tviewer
