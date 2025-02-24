@@ -168,18 +168,32 @@
     login_user: "{{ opensips_cp_db_user }}"
     login_password: "{{ opensips_cp_db_pass }}"
     login_port: "{{ opensips_cp_db_port | d(omit) }}"
-    query: REPLACE INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
+    query: |
+      INSERT INTO ocp_boxes_config (id, name, mi_conn,`desc`,assoc_id{% if item.monit_host is defined or opensips_monit_host is defined %}, monit_conn{% endif %})
+        VALUES ({{ item.index | d(opensips_mi_id) | d(ansible_loop.index) }},
+                '{{ item.name | d(opensips_mi_name) }}', 'json:{{ item.host | d(opensips_mi_host) }}:{{ item.port | d(opensips_mi_port) }}/{{ item.root | d(opensips_mi_root) }}',
+                '{{ item.desc | d(opensips_mi_desc) }}',1{% if item.monit_host is defined or opensips_monit_host is defined %}, '{{ item.monit_host | d(opensips_monit_host) }}:{{ item.monit_port | d(opensips_monit_port) }}'{% endif %})
+      ON DUPLICATE KEY UPDATE mi_conn='json:{{ item.host | d(opensips_mi_host) }}:{{ item.port | d(opensips_mi_port) }}/{{ item.root | d(opensips_mi_root) }}',
+        `desc`='{{ item.desc | d(opensips_mi_desc) }}'{% if item.monit_host is defined or opensips_monit_host is defined %}, monit_conn='{{ item.monit_host | d(opensips_monit_host) }}:{{ item.monit_port | d(opensips_monit_port) }}'{% endif %}
   when: opensips_cp_db_engine == 'mysql'
+  loop: '{{ opensips_mi_boxes }}'
 
 - name: Insert default box with postgres engine
-  community.mysql.mysql_query:
+  community.postgresql.postgresql_query:
     login_db: "{{ opensips_cp_db }}"
     login_host: "{{ opensips_cp_db_host }}"
     login_user: "{{ opensips_cp_db_user }}"
     login_password: "{{ opensips_cp_db_pass }}"
     login_port: "{{ opensips_cp_db_port | d(omit) }}"
-    query: INSERT INTO ocp_boxes_config (mi_conn,`desc`,assoc_id) values ('json:{{ opensips_mi_host }}:{{ opensips_mi_port }}/{{ opensips_mi_root }}','Default box',1);
+    query: |
+      INSERT INTO ocp_boxes_config (id, name, mi_conn,`desc`,assoc_id{% if item.monit_host is defined or opensips_monit_host is defined %}, monit_conn{% endif %})
+        VALUES ({{ item.index | d(opensips_mi_id) | d(ansible_loop.index) }},
+                '{{ item.name | d(opensips_mi_name) }}', 'json:{{ item.host | d(opensips_mi_host) }}:{{ item.port | d(opensips_mi_port) }}/{{ item.root | d(opensips_mi_root) }}',
+                '{{ item.desc | d(opensips_mi_desc) }}',1{% if item.monit_host is defined or opensips_monit_host is defined %}, '{{ item.monit_host | d(opensips_monit_host) }}:{{ item.monit_port | d(opensips_monit_port) }}'{% endif %})
+      ON DUPLICATE KEY UPDATE mi_conn='json:{{ item.host | d(opensips_mi_host) }}:{{ item.port | d(opensips_mi_port) }}/{{ item.root | d(opensips_mi_root) }}',
+        `desc`='{{ item.desc | d(opensips_mi_desc) }}'{% if item.monit_host is defined or opensips_monit_host is defined %}, monit_conn='{{ item.monit_host | d(opensips_monit_host) }}:{{ item.monit_port | d(opensips_monit_port) }}'{% endif %}
   when: opensips_cp_db_engine == 'postgres'
+  loop: '{{ opensips_mi_boxes }}'
 
 - name: Restart apache
   service:

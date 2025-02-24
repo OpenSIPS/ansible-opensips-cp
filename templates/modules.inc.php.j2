@@ -24,34 +24,30 @@
 ### List with all the available modules - you can enable and disable module from here
 
 $config_admin_modules 	= array (
-	{% set admin_modules=opensips_cp_admin_modules | d(default_opensips_cp_admin_modules) %}
-	{%- for module in admin_modules %}
-				"{{ module }}"   => array (
-					"enabled"         => true,
-					{% if admin_modules[module] is mapping -%}
-					{% if admin_modules[module].path is defined -%}
-					"path"            => "{{ admin_modules[module].path }}",
-					{% endif -%}
-					"name"            => "{{ admin_modules[module].name | d(default_opensips_cp_admin_modules[module]) }}"
-					{% elif not admin_modules[module] -%}
-					"name"            => "{{ default_opensips_cp_admin_modules[module] | d(module)}}"
-					{% else -%}
-					"name"            => "{{ admin_modules[module] | d(module) }}"
-					{% endif -%}
-					),
-	{% endfor %}
-	);
+{% for module in opensips_cp_admin_modules %}
+	"{{ module }}"   => array (
+		"enabled"         => true,
+		{% if opensips_cp_admin_modules[module] is mapping -%}
+		{% if opensips_cp_admin_modules[module].path is defined -%}
+		"path"            => "{{ opensips_cp_admin_modules[module].path }}",
+		{% endif -%}
+		"name"            => "{{ opensips_cp_admin_modules[module].name | d(default_opensips_cp_admin_modules[module]) | d(module | capitalize) }}"
+		{% elif not opensips_cp_admin_modules[module] -%}
+		"name"            => "{{ default_opensips_cp_admin_modules[module] | d(module | capitalize)}}"
+		{% else -%}
+		"name"            => "{{ opensips_cp_admin_modules[module] | d(module | capitalize) }}"
+	{% endif -%}),
+{% endfor %}
+);
 
 $config_modules	        = array (
-	{% set dict1=opensips_cp_modules | d(default_opensips_cp_modules) %}
-	{%- for module1Key in dict1 %}
-
+{% for module1Key in opensips_cp_modules %}
 	"{{ module1Key }}"	=> array (
 		"enabled"       => true,
-		"name"          => "{{ dict1[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
-		"icon"          => "{{ dict1[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
+		"name"          => "{{ opensips_cp_modules[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
+		"icon"          => "{{ opensips_cp_modules[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
 		"modules"       => array (
-			{%- set dict2=dict1[module1Key]['modules'] %}
+			{%- set dict2=opensips_cp_modules[module1Key]['modules'] %}
 			{%- for module2Key in dict2 %}
 
 			"{{ module2Key }}"   => array (
@@ -60,7 +56,7 @@ $config_modules	        = array (
 				{% if dict2[module2Key].path is defined -%}
 				"path"            => "{{ dict2[module2Key].path }}",
 				{% endif -%}
-				"name"            => "{{ dict2[module2Key].name | d(default_opensips_cp_modules[module1Key]['modules'][module2Key]) }}"
+				"name"            => "{{ dict2[module2Key].name | d(default_opensips_cp_modules[module1Key]['modules'][module2Key]) | d(module2Key | capitalize) }}"
 				{% elif not dict2[module2Key] -%}
 				"name"            => "{{ default_opensips_cp_modules[module1Key]['modules'][module2Key] | d(module2Key)}}"
 				{% else -%}

@@ -26,12 +26,17 @@ The following variables can be set to tune the role's install behavior:
 | `opensips_cp_pass` | Password for the default `admin` user | `opensips` |
 | `opensips_cp_stats` | Controls whether stats should be gathered | `true` |
 | `opensips_cp_force_deploy` | Forces a deployment with the latest code | `false` |
-| `opensips_cp_host_description` | Description of the OpenSIPS CP host | `SIP server` |
 | `opensips_cp_system_name` | Name of the OpenSIPS CP system | `SIP Servers` |
 | `opensips_cp_system_description` | Description of the OpenSIPS CP system | `OpenSIPS SIP server cluster` |
+| `opensips_mi_id` | OpenSIPS JSON-RPC listener's id | `1` |
 | `opensips_mi_host` | OpenSIPS JSON-RPC listener's host | `127.0.0.1` |
 | `opensips_mi_port` | OpenSIPS JSON-RPC listener's port | `8888` |
 | `opensips_mi_root` | OpenSIPS JSON-RPC listener's root | `mi` |
+| `opensips_mi_name` | OpenSIPS JSON-RPC listener's name | `SIP Server` |
+| `opensips_mi_desc` | OpenSIPS JSON-RPC listener's description | `Default box` |
+| `opensips_monit_host` | OpenSIPS Monit host | Undefined, not provided |
+| `opensips_monit_port` | OpenSIPS Monit port | `2812`, useful only when `opensips_monit_host` is defined |
+| `opensips_mi_boxes` | An array containing the `host`, `port`, `root` and `desc` nodes for each MI listener used | `An array with one box containing the `opensips_mi_*` variables |
 | `opensips_cp_monit_host` | Host used by the `monit` tool | Value of `opensips_mi_host` |
 | `opensips_cp_monit_port` | Port used by the `monit` tool | `2812` |
 | `opensips_cp_modules` | Please view [Modules Configuration](#modules-configuration) | [`default_opensips_cp_modules`](vars/main.yml) |
