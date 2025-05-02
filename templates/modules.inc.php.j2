@@ -44,8 +44,10 @@ $config_modules	        = array (
 {% for module1Key in opensips_cp_modules %}
 	"{{ module1Key }}"	=> array (
 		"enabled"       => true,
-		"name"          => "{{ opensips_cp_modules[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
-		"icon"          => "{{ opensips_cp_modules[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['name']) }}",
+		"name"          => "{{ dict1[module1Key]['name'] | d(default_opensips_cp_modules[module1Key]['name']) | d(module1Key | capitalize) }}",
+		{% if dict1[module1Key]['icon'] is defined or default_opensips_cp_modules[module1Key]['icon'] is defined -%}
+		"icon"          => "{{ dict1[module1Key]['icon'] | d(default_opensips_cp_modules[module1Key]['icon']) }}",
+		{% endif -%}
 		"modules"       => array (
 			{%- set dict2=opensips_cp_modules[module1Key]['modules'] %}
 			{%- for module2Key in dict2 %}
