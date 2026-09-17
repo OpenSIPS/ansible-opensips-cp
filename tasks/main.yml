@@ -1,6 +1,6 @@
 ---
 - name: Gather distribution vars
-  include_vars: '{{ ansible_os_family | lower }}.yml'
+  include_vars: '{{ ansible_facts.os_family | lower }}.yml'
 
 - name: Install prerequisites
   package:
@@ -39,7 +39,7 @@
 
 - name: Enable site
   command: a2ensite httpd-opensips
-  when: ansible_os_family == "Debian"
+  when: ansible_facts.os_family == "Debian"
   register: enable_res
   changed_when: "'already' not in enable_res.stdout"
   notify:
@@ -47,7 +47,7 @@
 
 - name: Disable default site
   command: a2dissite 000-default
-  when: ansible_os_family == "Debian"
+  when: ansible_facts.os_family == "Debian"
   register: disable_res
   changed_when: "'already' not in disable_res.stdout"
   notify:
